@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#4E2A84">
+  <title>CTI · Audience Results</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+
+  <style>
+    :root {
+      --nu-purple: #4E2A84;
+      --nu-purple-deep: #3D1B6E;
+      --nu-purple-mid: #544586;
+      --nu-purple-light: #8B6BB1;
+      --nu-purple-pale: #EDE9F5;
+      --nu-gold: #FBAE40;
+      --nu-gold-light: #FFD580;
+      --nu-white: #FFFFFF;
+      --nu-gray: #555759;
+      --nu-gray-light: #A0A0A5;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: radial-gradient(ellipse at top, #5a3094 0%, #2a1255 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      min-height: 100dvh;
+      color: var(--nu-white);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* ===== ANIMATED BACKGROUND PARTICLES ===== */
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251,174,64,0.3) 0%, transparent 70%);
+      animation: float 25s infinite ease-in-out;
+    }
+    .particle:nth-child(1) { width: 200px; height: 200px; top: -100px; left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { width: 300px; height: 300px; top: 30%; right: -150px; animation-delay: -8s; }
+    .particle:nth-child(3) { width: 250px; height: 250px; bottom: -125px; left: 30%; animation-delay: -16s; }
+    .particle:nth-child(4) { width: 180px; height: 180px; top: 60%; left: 50%; animation-delay: -4s; background: radial-gradient(circle, rgba(139,107,177,0.2) 0%, transparent 70%); }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -30px) scale(1.1); }
+      66% { transform: translate(-30px, 40px) scale(0.95); }
+    }
+
+    /* ===== LAYOUT ===== */
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 28px;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      gap: 24px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-mark {
+      width: 50px; height: 50px;
+      background: linear-gradient(135deg, var(--nu-gold), #ff9020);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--nu-purple-deep);
+      box-shadow: 0 8px 24px rgba(251,174,64,0.3);
+    }
+    .brand-text .brand-label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--nu-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .brand-text .brand-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-top: 2px;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 12px;
+    }
+    .stat-pod {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      padding: 12px 22px;
+      border-radius: 14px;
+      text-align: center;
+      min-width: 110px;
+    }
+    .stat-pod .stat-num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--nu-gold);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-pod .stat-lbl {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 6px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* ===== HERO COMMENTARY ===== */
+    .commentary-hero {
+      background: linear-gradient(135deg, rgba(251,174,64,0.12) 0%, rgba(139,107,177,0.08) 100%);
+      border: 1px solid rgba(251,174,64,0.3);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .commentary-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--nu-gold), transparent);
+    }
+    .commentary-hero .commentary-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--nu-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .commentary-hero .commentary-label::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--nu-gold);
+      animation: pulse-dot 2s infinite;
+      box-shadow: 0 0 12px var(--nu-gold);
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    .commentary-text {
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.45;
+      letter-spacing: -0.3px;
+      color: rgba(255,255,255,0.95);
+    }
+    .commentary-text .highlight {
+      color: var(--nu-gold);
+      font-weight: 700;
+      background: linear-gradient(transparent 60%, rgba(251,174,64,0.2) 60%);
+      padding: 0 4px;
+    }
+    .commentary-followup {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* ===== DASHBOARD GRID ===== */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+    }
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 24px;
+      width: 60px; height: 3px;
+      border-radius: 0 0 3px 3px;
+    }
+    .panel.q1::before { background: var(--nu-gold); }
+    .panel.q2::before { background: var(--nu-purple-light); }
+
+    .panel-title {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--nu-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .panel.q2 .panel-title { color: var(--nu-purple-light); }
+    .panel-subtitle {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 38px 1fr 95px;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .bar-letter {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--nu-purple-mid);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+    .bar-row.multi .bar-letter {
+      border-radius: 7px;
+      width: 30px;
+      height: 30px;
+      font-size: 13px;
+    }
+    .bar-row.top-pick .bar-letter {
+      background: var(--nu-gold);
+      color: var(--nu-purple-deep);
+      box-shadow: 0 0 14px rgba(251,174,64,0.5);
+    }
+    .bar-track {
+      position: relative;
+      height: 34px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, var(--nu-purple-light), var(--nu-gold));
+      border-radius: 8px;
+      transition: width 1.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+      box-shadow: 0 0 12px rgba(251,174,64,0.2);
+    }
+    .bar-row.top-pick .bar-fill {
+      background: linear-gradient(90deg, var(--nu-gold), #ff9020);
+      box-shadow: 0 0 20px rgba(251,174,64,0.4);
+    }
+    .bar-label {
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+      z-index: 2;
+      white-space: nowrap;
+      max-width: calc(100% - 24px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bar-stats {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .bar-stats .count {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--nu-gold);
+      line-height: 1;
+    }
+    .bar-stats .pct {
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+      display: block;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    /* ===== INSIGHTS GRID (key observations) ===== */
+    .insights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .insight-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .insight-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--nu-gold), transparent);
+    }
+    .insight-label {
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      color: var(--nu-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .insight-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.88);
+    }
+    .insight-text strong { color: var(--nu-gold); font-weight: 700; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+    }
+    .conn-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .conn-status .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+    .conn-status.connected .dot {
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+    .footer-actions {
+      display: flex;
+      gap: 16px;
+    }
+    .footer-action {
+      color: var(--nu-gold);
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .footer-action:hover { opacity: 0.7; }
+
+    /* ===== LOADING / EMPTY STATES ===== */
+    .loading {
+      text-align: center;
+      padding: 80px 20px;
+      color: rgba(255,255,255,0.6);
+    }
+    .loading-spinner {
+      width: 48px; height: 48px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--nu-gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state {
+      text-align: center;
+      padding: 32px 20px;
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .insights { grid-template-columns: 1fr; }
+      .commentary-text { font-size: 18px; }
+    }
+    @media (max-width: 640px) {
+      .shell { padding: 20px 16px; }
+      .header { flex-direction: column; align-items: flex-start; }
+      .header-stats { width: 100%; }
+      .stat-pod { flex: 1; min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <div class="shell">
+    <div class="header">
+      <div class="brand">
+        <div class="brand-mark">📊</div>
+        <div class="brand-text">
+          <div class="brand-label">CTI · Northwestern Radiology</div>
+          <div class="brand-title">Live Audience Analysis</div>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-pod">
+          <div class="stat-num" id="q1-total">—</div>
+          <div class="stat-lbl">Respondents</div>
+        </div>
+        <div class="stat-pod">
+          <div class="stat-num" id="q2-total">—</div>
+          <div class="stat-lbl">Barrier Picks</div>
+        </div>
+        <div class="stat-pod">
+          <div class="stat-num" id="avg-barriers">—</div>
+          <div class="stat-lbl">Barriers / Person</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="content">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <div>Fetching live results from CTI database…</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="conn-status" id="conn-status">
+        <span class="dot"></span>
+        <span id="conn-text">Connecting…</span>
+      </div>
+      <div class="footer-actions">
+        <a class="footer-action" id="refresh-btn">↻ Refresh now</a>
+        <span style="color:rgba(255,255,255,0.3);">·</span>
+        <span style="color:rgba(255,255,255,0.5);">Last update: <span id="last-update">—</span></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    //  CONFIGURATION — paste your Firebase database URL here
+    // ============================================================
+    const FIREBASE_DB = "https://cti-poll-2026-default-rtdb.firebaseio.com";
+    const POLL_NAME = "cti_ai_workflow_2026_v2";
+    const REFRESH_INTERVAL_MS = 5000;  // auto-refresh every 5 seconds
+    // ============================================================
+
+    const ADOPTION = [
+      { key: "A", title: "Not yet",            desc: "Haven't started", tier: 0 },
+      { key: "B", title: "Writing only",       desc: "Email, abstracts, documents", tier: 1 },
+      { key: "C", title: "Coding helper",      desc: "Snippets, debugging", tier: 2 },
+      { key: "D", title: "Data pipelines",     desc: "DICOM/NIfTI, parametric maps", tier: 3 },
+      { key: "E", title: "Multi-step agentic", desc: "Tool use, file creation", tier: 4 },
+      { key: "F", title: "Connected systems",  desc: "MCP, Claude Code, multi-agent", tier: 5 },
+    ];
+
+    const BARRIERS = [
+      { key: "1", title: "Cost",                       desc: "Token bills, no institutional license" },
+      { key: "2", title: "Time to learn",              desc: "Already overloaded" },
+      { key: "3", title: "Lack of support",            desc: "No training, no community of practice" },
+      { key: "4", title: "Data security & IRB",        desc: "PHI, sponsor data concerns" },
+      { key: "5", title: "Output trust",               desc: "Hallucinations, verification" },
+      { key: "6", title: "Intellectual reluctance",    desc: "Prefer to think it through myself" },
+      { key: "7", title: "Career stage / priority",    desc: "Too senior to retrain, or too junior to risk it" },
+      { key: "8", title: "Tooling friction",           desc: "Poor integration with existing tools" },
+      { key: "9", title: "Environmental concerns",     desc: "Datacenter footprint" },
+      { key: "0", title: "No interest",                desc: "Not convinced of value" },
+    ];
+
+    let refreshTimer = null;
+
+    async function fetchPollData() {
+      try {
+        const r = await fetch(`${FIREBASE_DB}/polls/${POLL_NAME}.json`, { cache: 'no-store' });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const data = await r.json();
+        renderAll(data || {});
+        setConnected(true);
+      } catch (e) {
+        console.error('Fetch error:', e);
+        setConnected(false);
+        if (document.getElementById('content').querySelector('.loading')) {
+          document.getElementById('content').innerHTML = `
+            <div class="empty-state">
+              ⚠ Could not reach the database. Check your network and try again.<br>
+              <small style="margin-top:8px;display:block;">${e.message}</small>
+            </div>`;
+        }
+      }
+    }
+
+    function setConnected(ok) {
+      const status = document.getElementById('conn-status');
+      const text = document.getElementById('conn-text');
+      const lu = document.getElementById('last-update');
+      if (ok) {
+        status.classList.add('connected');
+        text.textContent = 'Live · synced';
+        const now = new Date();
+        lu.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      } else {
+        status.classList.remove('connected');
+        text.textContent = 'Connection lost';
+      }
+    }
+
+    function renderAll(data) {
+      const adoptionData = data.adoption || {};
+      const barriersData = data.barriers || {};
+
+      const q1Total = ADOPTION.reduce((s, o) => s + (adoptionData[o.key] || 0), 0);
+      const q2Total = BARRIERS.reduce((s, o) => s + (barriersData[o.key] || 0), 0);
+      const avgBarriers = q1Total > 0 ? (q2Total / q1Total).toFixed(1) : '0';
+
+      document.getElementById('q1-total').textContent = q1Total;
+      document.getElementById('q2-total').textContent = q2Total;
+      document.getElementById('avg-barriers').textContent = avgBarriers;
+
+      // Build hero commentary
+      const commentary = buildCommentary(adoptionData, barriersData, q1Total, q2Total);
+
+      // Render dashboard
+      document.getElementById('content').innerHTML = `
+        <div class="commentary-hero">
+          <div class="commentary-label">Live Read · Auto-Generated</div>
+          <div class="commentary-text">${commentary.headline}</div>
+          ${commentary.followup ? `<div class="commentary-followup">${commentary.followup}</div>` : ''}
+        </div>
+
+        <div class="dashboard">
+          <div class="panel q1">
+            <div class="panel-title">Q1 · Adoption Level</div>
+            <div class="panel-subtitle">How they currently use agentic AI</div>
+            <div id="q1-bars"></div>
+          </div>
+          <div class="panel q2">
+            <div class="panel-title">Q2 · Barriers to Adoption</div>
+            <div class="panel-subtitle">What's holding them back (multi-select)</div>
+            <div id="q2-bars"></div>
+          </div>
+        </div>
+
+        <div class="insights">
+          ${commentary.insights.map(ins => `
+            <div class="insight-card">
+              <div class="insight-label">${ins.label}</div>
+              <div class="insight-text">${ins.text}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      renderBars('q1-bars', ADOPTION, adoptionData, q1Total, false, commentary.topAdoption);
+      renderBars('q2-bars', BARRIERS, barriersData, q1Total, true, commentary.topBarriers);
+    }
+
+    function renderBars(containerId, options, data, denominator, isMulti, highlightKeys) {
+      const container = document.getElementById(containerId);
+      let maxCount = 0;
+      options.forEach(o => { maxCount = Math.max(maxCount, data[o.key] || 0); });
+
+      options.forEach(opt => {
+        const count = data[opt.key] || 0;
+        const pct = denominator > 0 ? (count / denominator * 100) : 0;
+        const barPct = maxCount > 0 ? (count / maxCount * 100) : 0;
+        const isTop = highlightKeys.includes(opt.key);
+
+        const row = document.createElement('div');
+        row.className = 'bar-row' + (isMulti ? ' multi' : '') + (isTop ? ' top-pick' : '');
+        row.innerHTML = `
+          <div class="bar-letter">${opt.key}</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:0%"></div>
+            <div class="bar-label">${opt.title}</div>
+          </div>
+          <div class="bar-stats">
+            <div class="count">${count}</div>
+            <span class="pct">${pct.toFixed(1)}%</span>
+          </div>`;
+        container.appendChild(row);
+        // animate fill in
+        requestAnimationFrame(() => {
+          row.querySelector('.bar-fill').style.width = `${Math.max(barPct, 0.5)}%`;
+        });
+      });
+    }
+
+    // ============================================================
+    //  THE FANCY PART — templated, context-aware commentary
+    // ============================================================
+    function buildCommentary(adoption, barriers, q1Total, q2Total) {
+      if (q1Total === 0) {
+        return {
+          headline: `Awaiting first votes — <span class="highlight">the room hasn't weighed in yet.</span>`,
+          followup: `As soon as a few responses come in, this page will surface the patterns automatically.`,
+          insights: [],
+          topAdoption: [],
+          topBarriers: [],
+        };
+      }
+
+      // Find top adoption tier(s)
+      const sortedAdoption = ADOPTION
+        .map(o => ({ ...o, count: adoption[o.key] || 0 }))
+        .sort((a, b) => b.count - a.count);
+      const topAdoption = sortedAdoption[0];
+      const topAdoptionPct = (topAdoption.count / q1Total * 100);
+
+      // Find top barriers
+      const sortedBarriers = BARRIERS
+        .map(o => ({ ...o, count: barriers[o.key] || 0 }))
+        .sort((a, b) => b.count - a.count)
+        .filter(b => b.count > 0);
+      const topBarriers = sortedBarriers.slice(0, 3);
+
+      // Categorize the audience
+      const earlyTiers = ['A', 'B'].reduce((s, k) => s + (adoption[k] || 0), 0);
+      const midTiers   = ['C', 'D'].reduce((s, k) => s + (adoption[k] || 0), 0);
+      const advTiers   = ['E', 'F'].reduce((s, k) => s + (adoption[k] || 0), 0);
+
+      const earlyPct = (earlyTiers / q1Total * 100);
+      const midPct   = (midTiers / q1Total * 100);
+      const advPct   = (advTiers / q1Total * 100);
+
+      // Build headline
+      let headline = '';
+      if (topAdoptionPct >= 40) {
+        headline = `The room is concentrated at <span class="highlight">${topAdoption.key} — ${topAdoption.title}</span> (${topAdoptionPct.toFixed(0)}%).`;
+      } else if (advPct > earlyPct && advPct > midPct) {
+        headline = `The room skews <span class="highlight">advanced</span> — ${advPct.toFixed(0)}% are already running multi-step agents or connected systems.`;
+      } else if (earlyPct > advPct && earlyPct > midPct) {
+        headline = `The room is mostly <span class="highlight">early-stage</span> — ${earlyPct.toFixed(0)}% are either not started or using AI only for writing.`;
+      } else if (midPct > earlyPct && midPct > advPct) {
+        headline = `The room sits squarely in <span class="highlight">working-tool territory</span> — ${midPct.toFixed(0)}% use AI as a coding helper or for data pipelines.`;
+      } else {
+        headline = `The room is <span class="highlight">distributed across all adoption tiers</span> — no single level dominates.`;
+      }
+
+      // Add barrier context
+      let followup = '';
+      if (topBarriers.length > 0) {
+        const topBarrier = topBarriers[0];
+        const topBarrierPct = (topBarrier.count / q1Total * 100);
+        if (topBarriers.length === 1) {
+          followup = `The single dominant barrier is <strong>${topBarrier.title}</strong> (${topBarrierPct.toFixed(0)}% of respondents).`;
+        } else {
+          const second = topBarriers[1];
+          followup = `The top barriers are <strong>${topBarrier.title}</strong> (${topBarrierPct.toFixed(0)}%) and <strong>${second.title}</strong> (${(second.count/q1Total*100).toFixed(0)}%) — that combination tells us what to address first.`;
+        }
+      }
+
+      // Build insight cards
+      const insights = [];
+
+      // Insight 1: Distribution shape
+      if (earlyPct >= 50) {
+        insights.push({
+          label: 'Distribution Shape',
+          text: `<strong>${earlyPct.toFixed(0)}%</strong> of the room is still at the writing-or-below tier. The opportunity for tier C → D → E movement is large.`
+        });
+      } else if (advPct >= 35) {
+        insights.push({
+          label: 'Distribution Shape',
+          text: `<strong>${advPct.toFixed(0)}%</strong> of the room is already at multi-step or connected-systems level. This is a more sophisticated audience than typical.`
+        });
+      } else {
+        insights.push({
+          label: 'Distribution Shape',
+          text: `The room balances roughly <strong>${earlyPct.toFixed(0)}/${midPct.toFixed(0)}/${advPct.toFixed(0)}%</strong> across early, mid, and advanced tiers — a healthy mix.`
+        });
+      }
+
+      // Insight 2: Barrier pattern
+      if (topBarriers.length > 0) {
+        const topBarrier = topBarriers[0];
+        const structuralBarriers = ['3', '4', '8'];  // Lack of support, security, tooling
+        const personalBarriers   = ['6', '7', '0'];  // Reluctance, career, no interest
+        const resourceBarriers   = ['1', '2'];        // Cost, time
+
+        const structPicks = structuralBarriers.reduce((s, k) => s + (barriers[k] || 0), 0);
+        const persPicks   = personalBarriers.reduce((s, k) => s + (barriers[k] || 0), 0);
+        const resPicks    = resourceBarriers.reduce((s, k) => s + (barriers[k] || 0), 0);
+
+        let pattern = '';
+        const totalPattern = structPicks + persPicks + resPicks;
+        if (totalPattern > 0) {
+          if (structPicks > persPicks && structPicks > resPicks) {
+            pattern = `Mostly <strong>structural</strong> — support, security, integration. These are institutional problems with institutional solutions.`;
+          } else if (resPicks > structPicks && resPicks > persPicks) {
+            pattern = `Mostly <strong>resource constraints</strong> — cost and time. These respond to institutional licensing and protected experimentation time.`;
+          } else if (persPicks > structPicks && persPicks > resPicks) {
+            pattern = `Mostly <strong>personal / philosophical</strong> — reluctance, priority, interest. These need persuasion and demonstration, not infrastructure.`;
+          } else {
+            pattern = `<strong>Mixed</strong> across structural, resource, and personal categories — no single fix addresses the room.`;
+          }
+        }
+        insights.push({ label: 'Barrier Pattern', text: pattern });
+      }
+
+      // Insight 3: Adoption × barrier coherence
+      if (topBarriers.length > 0 && q1Total >= 3) {
+        const topBarrierKey = topBarriers[0].key;
+        const topBarrierTitle = topBarriers[0].title;
+        let bridge = '';
+        // Specific bridges between adoption tier and dominant barrier
+        if (earlyPct >= 50) {
+          if (topBarrierKey === '3') bridge = `Early-stage room + "${topBarrierTitle}" as top barrier — exactly the gap a CTI training program could close.`;
+          else if (topBarrierKey === '4') bridge = `Early-stage room + security concerns — they need a sanctioned path more than they need new tools.`;
+          else if (topBarrierKey === '2') bridge = `Early-stage room + "time to learn" — the activation energy problem. Pair-with-an-expert sessions help more than docs.`;
+          else if (topBarrierKey === '1') bridge = `Early-stage room + cost — institutional licensing would unlock the largest segment fastest.`;
+          else bridge = `Early-stage room with "${topBarrierTitle}" as the top barrier — start where the activation energy is lowest.`;
+        } else if (advPct >= 35) {
+          bridge = `Advanced users still cite "${topBarrierTitle}" — the barriers don't disappear with experience, they change shape.`;
+        } else {
+          bridge = `Mid-tier room + "${topBarrierTitle}" as top barrier — these are people who've started and hit a wall. Targeted unblockers, not introductions.`;
+        }
+        insights.push({ label: 'Bridge Insight', text: bridge });
+      }
+
+      return {
+        headline,
+        followup,
+        insights,
+        topAdoption: [topAdoption.key],
+        topBarriers: topBarriers.slice(0, 2).map(b => b.key),
+      };
+    }
+
+    // Initial fetch + auto-refresh
+    fetchPollData();
+    refreshTimer = setInterval(fetchPollData, REFRESH_INTERVAL_MS);
+
+    document.getElementById('refresh-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      fetchPollData();
+    });
+  </script>
+</body>
+</html>
