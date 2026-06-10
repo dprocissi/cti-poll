@@ -363,6 +363,123 @@
     }
     .insight-text strong { color: var(--nu-gold); font-weight: 700; }
 
+    /* ===== EXPANDED ANALYSIS SECTIONS ===== */
+    .section-divider {
+      margin: 32px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-divider::before, .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(251,174,64,0.4), transparent);
+    }
+    .section-divider .label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--nu-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .analysis-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .analysis-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 22px 26px;
+      position: relative;
+      overflow: hidden;
+      border-left: 3px solid var(--nu-gold);
+    }
+    .analysis-card.cat-trust       { border-left-color: #f59e0b; }
+    .analysis-card.cat-institutional { border-left-color: #8B6BB1; }
+    .analysis-card.cat-time        { border-left-color: #06b6d4; }
+    .analysis-card.cat-philosophical { border-left-color: #ec4899; }
+    .analysis-card.cat-adoption    { border-left-color: var(--nu-gold); }
+    .analysis-card.cat-synthesis   {
+      background: linear-gradient(135deg, rgba(251,174,64,0.08) 0%, rgba(139,107,177,0.06) 100%);
+      border-left-color: var(--nu-gold);
+      border-left-width: 4px;
+    }
+
+    .analysis-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .analysis-tag {
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      color: var(--nu-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      background: rgba(251,174,64,0.12);
+      border-radius: 6px;
+      border: 1px solid rgba(251,174,64,0.25);
+    }
+    .analysis-card.cat-institutional .analysis-tag { color: #B89CDC; background: rgba(139,107,177,0.15); border-color: rgba(139,107,177,0.3); }
+    .analysis-card.cat-time .analysis-tag          { color: #67e8f9; background: rgba(6,182,212,0.12); border-color: rgba(6,182,212,0.3); }
+    .analysis-card.cat-philosophical .analysis-tag { color: #f9a8d4; background: rgba(236,72,153,0.12); border-color: rgba(236,72,153,0.3); }
+    .analysis-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: -0.2px;
+    }
+    .analysis-body {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.82);
+    }
+    .analysis-body p { margin-bottom: 10px; }
+    .analysis-body p:last-child { margin-bottom: 0; }
+    .analysis-body strong { color: var(--nu-gold); font-weight: 700; }
+    .analysis-body em { font-style: italic; color: rgba(255,255,255,0.7); }
+
+    .analysis-stat-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .analysis-stat-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      padding: 5px 12px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+    .analysis-stat-pill strong {
+      color: var(--nu-gold);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .synthesis-card .analysis-title {
+      font-size: 19px;
+      font-weight: 700;
+    }
+    .synthesis-card .analysis-body {
+      font-size: 15px;
+    }
+
     /* ===== FOOTER ===== */
     .footer {
       display: flex;
@@ -602,6 +719,43 @@
             </div>
           `).join('')}
         </div>
+
+        ${commentary.expandedAnalysis.length > 0 ? `
+          <div class="section-divider">
+            <span class="label">Expanded Analysis</span>
+          </div>
+          <div class="analysis-stack">
+            ${commentary.expandedAnalysis.map(card => `
+              <div class="analysis-card cat-${card.category}">
+                <div class="analysis-header">
+                  <span class="analysis-tag">${card.tag}</span>
+                  <span class="analysis-title">${card.title}</span>
+                </div>
+                <div class="analysis-body">${card.body}</div>
+                ${card.stats && card.stats.length > 0 ? `
+                  <div class="analysis-stat-row">
+                    ${card.stats.map(s => `<span class="analysis-stat-pill">${s.label} <strong>${s.value}</strong></span>`).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${commentary.synthesis ? `
+          <div class="section-divider">
+            <span class="label">What This Means for Northwestern</span>
+          </div>
+          <div class="analysis-stack">
+            <div class="analysis-card cat-synthesis synthesis-card">
+              <div class="analysis-header">
+                <span class="analysis-tag">Synthesis</span>
+                <span class="analysis-title">${commentary.synthesis.title}</span>
+              </div>
+              <div class="analysis-body">${commentary.synthesis.body}</div>
+            </div>
+          </div>
+        ` : ''}
       `;
 
       renderBars('q1-bars', ADOPTION, adoptionData, q1Total, false, commentary.topAdoption);
@@ -648,6 +802,8 @@
           headline: `Awaiting first votes — <span class="highlight">the room hasn't weighed in yet.</span>`,
           followup: `As soon as a few responses come in, this page will surface the patterns automatically.`,
           insights: [],
+          expandedAnalysis: [],
+          synthesis: null,
           topAdoption: [],
           topBarriers: [],
         };
@@ -771,10 +927,219 @@
         insights.push({ label: 'Bridge Insight', text: bridge });
       }
 
+      // ============================================================
+      //  EXPANDED ANALYSIS — full paragraphs for each top barrier
+      //  category, plus an adoption-tier paragraph and a synthesis
+      // ============================================================
+      const expandedAnalysis = [];
+
+      // — Always: a paragraph on the adoption distribution itself —
+      if (q1Total >= 3) {
+        const adoptionStats = [
+          { label: 'Early (A–B)', value: `${earlyPct.toFixed(0)}%` },
+          { label: 'Mid (C–D)',   value: `${midPct.toFixed(0)}%` },
+          { label: 'Advanced (E–F)', value: `${advPct.toFixed(0)}%` },
+        ];
+
+        let adoptionBody = '';
+        const tierDPct = ((adoption['D'] || 0) / q1Total * 100);
+        const tierFPct = ((adoption['F'] || 0) / q1Total * 100);
+        const tierD0 = (adoption['D'] || 0) === 0;
+        const tierF0 = (adoption['F'] || 0) === 0;
+
+        if (earlyPct >= 50) {
+          adoptionBody = `<p>The room is concentrated in the writing-and-below tiers. <strong>${earlyPct.toFixed(0)}%</strong> of respondents are using AI either not at all or only for text polishing — a population that has seen the tool but not yet integrated it into their scientific workflow.</p>`;
+          if (midPct > 0) {
+            adoptionBody += `<p>The mid-tier (<strong>${midPct.toFixed(0)}%</strong>) is where the appetite for actual workflow integration starts to appear. This is the most actionable segment — they have momentum, they hit walls, and they want help.</p>`;
+          }
+        } else if (advPct >= 35) {
+          adoptionBody = `<p>This is a more advanced audience than typical. <strong>${advPct.toFixed(0)}%</strong> are already at multi-step agentic or connected-systems level, meaning a meaningful fraction of the room is doing what most institutions consider "advanced" use of AI. The conversation here is less about <em>whether</em> to adopt and more about <em>how to scale and govern</em> what's already happening.</p>`;
+        } else if (midPct >= 40) {
+          adoptionBody = `<p>The center of mass sits in <strong>working-tool territory</strong> — coding helpers and data pipelines. This is a room that has moved past "is AI useful" and into "how do I make it actually work in my workflow." That's a more sophisticated starting point than headline statistics about AI adoption usually suggest.</p>`;
+        } else {
+          adoptionBody = `<p>The room is unusually balanced across tiers: <strong>${earlyPct.toFixed(0)}%</strong> early, <strong>${midPct.toFixed(0)}%</strong> mid, <strong>${advPct.toFixed(0)}%</strong> advanced. No single message will land for everyone — this audience benefits from a tiered framing more than a single recommendation.</p>`;
+        }
+
+        // Flag the D-gap if present
+        if (tierD0 && q1Total >= 5) {
+          adoptionBody += `<p><strong>Notable gap:</strong> zero respondents picked tier D (data pipelines). This is significant in an imaging-research audience. Either people aren't building data pipelines with AI, or those who are have already moved past calling them "pipelines" and self-identify as tier E. Either reading is interesting.</p>`;
+        }
+        if (tierF0 && advPct < 15) {
+          adoptionBody += `<p>Tier F (connected systems — MCP, Claude Code, multi-agent orchestration) is also empty. This is the frontier that institutional infrastructure could unlock for the whole room.</p>`;
+        }
+
+        expandedAnalysis.push({
+          category: 'adoption',
+          tag: 'Adoption Profile',
+          title: 'How the room actually uses AI today',
+          body: adoptionBody,
+          stats: adoptionStats,
+        });
+      }
+
+      // — Barrier category paragraphs — surface 2-3 based on top barriers —
+      const topBarrierKeys = topBarriers.slice(0, 3).map(b => b.key);
+
+      // Trust & Verification (key 5: Output trust)
+      if (topBarrierKeys.includes('5')) {
+        const trustCount = barriers['5'] || 0;
+        const trustPct = (trustCount / q1Total * 100);
+        const rank = topBarrierKeys.indexOf('5') + 1;
+        const intelReluctancePct = ((barriers['6'] || 0) / q1Total * 100);
+
+        let body = `<p>The <strong>Output trust</strong> barrier is sitting at <strong>${trustPct.toFixed(0)}%</strong> of respondents (rank #${rank}). This isn't a "people don't want AI" signal — it's a "people have tried AI and watched it hallucinate" signal. It's the most common stopping point for users who got past the curiosity phase.</p>`;
+        body += `<p>The fix is not more cheerleading. The fix is <em>structured verification</em>: workflows where AI output is checked against a known reference (a validated pipeline, a manual measurement, a second independent agent). The institutions that solve this barrier do so by treating AI output as <em>draft</em> rather than <em>answer</em>, and by giving people verification tooling — not just access.</p>`;
+        if (intelReluctancePct < 20 && intelReluctancePct < trustPct) {
+          body += `<p>Telling detail: "Intellectual reluctance" sits at only <strong>${intelReluctancePct.toFixed(0)}%</strong>. The room isn't philosophically resistant — they're <em>tactically</em> blocked. They want to use it. They just don't trust the output yet.</p>`;
+        }
+
+        expandedAnalysis.push({
+          category: 'trust',
+          tag: '⚠ Trust & Verification',
+          title: 'The trust wall — the most common stopping point',
+          body,
+          stats: [
+            { label: 'Output trust', value: `${trustPct.toFixed(0)}%` },
+            { label: 'Intellectual reluctance', value: `${intelReluctancePct.toFixed(0)}%` },
+            { label: 'Rank', value: `#${rank}` },
+          ],
+        });
+      }
+
+      // Institutional Block (keys 3 lack of support, 4 IRB/security, 1 cost)
+      const instKeys = ['3', '4', '1'];
+      const instInTop = instKeys.filter(k => topBarrierKeys.includes(k));
+      if (instInTop.length > 0) {
+        const supPct = ((barriers['3'] || 0) / q1Total * 100);
+        const secPct = ((barriers['4'] || 0) / q1Total * 100);
+        const cosPct = ((barriers['1'] || 0) / q1Total * 100);
+
+        let body = `<p>Multiple barriers in the room are <strong>institutional, not personal</strong>: Lack of support (<strong>${supPct.toFixed(0)}%</strong>), Data security &amp; IRB (<strong>${secPct.toFixed(0)}%</strong>), and Cost (<strong>${cosPct.toFixed(0)}%</strong>). None of these are things an individual researcher can solve at their desk. They are decisions that have to be made by departments, by IT, by IRB committees, by deans.</p>`;
+        if (secPct >= 25) {
+          body += `<p>The <strong>Data security &amp; IRB</strong> piece is especially load-bearing for imaging research. Researchers don't actually know what's allowed — is a de-identified DICOM OK to send to Claude? Can sponsor data be touched? The absence of clear institutional guidance is itself the barrier. People aren't being reckless; they're being careful in the absence of rules.</p>`;
+        }
+        if (supPct >= 25) {
+          body += `<p><strong>Lack of support</strong> at this level means people don't know who to ask — there is no Northwestern AI-for-research office, no training program, no community of practice. They are figuring it out alone, which is slow.</p>`;
+        }
+        body += `<p>The contrast with UChicago's announcement is direct: they are addressing this category at the institutional level — Claude Enterprise access for all faculty, faculty committees on AI in education and academic life, a CTO assigned to oversee the rollout. Those are not technical decisions. They are institutional ones.</p>`;
+
+        expandedAnalysis.push({
+          category: 'institutional',
+          tag: '⚙ Institutional Block',
+          title: 'Barriers that require institutional action, not individual effort',
+          body,
+          stats: [
+            { label: 'Lack of support', value: `${supPct.toFixed(0)}%` },
+            { label: 'Security/IRB', value: `${secPct.toFixed(0)}%` },
+            { label: 'Cost', value: `${cosPct.toFixed(0)}%` },
+          ],
+        });
+      }
+
+      // Time & Activation (key 2: Time to learn)
+      if (topBarrierKeys.includes('2')) {
+        const timePct = ((barriers['2'] || 0) / q1Total * 100);
+        const rank = topBarrierKeys.indexOf('2') + 1;
+
+        let body = `<p>The <strong>Time to learn</strong> barrier (<strong>${timePct.toFixed(0)}%</strong>, rank #${rank}) is the activation-energy problem. People are interested. They've seen demos. They believe it could help. They cannot find the hours.</p>`;
+        body += `<p>This barrier responds <em>poorly</em> to documentation and <em>well</em> to two specific interventions: (a) <strong>protected experimentation time</strong> — formally allocated, not "in your spare time" — and (b) <strong>pair-with-an-expert sessions</strong> — one hour with someone who already uses the tools, sitting alongside a real task. Both are institutional moves, not individual ones.</p>`;
+        if (advPct >= 20) {
+          body += `<p>Worth noting: the people in this room who <em>are</em> already at tier E or F didn't get there in their spare time either. They got there because something forced them to (a deadline, a grant, a problem too painful to solve manually). Activation energy almost always requires a forcing function.</p>`;
+        }
+
+        expandedAnalysis.push({
+          category: 'time',
+          tag: '⏱ Time & Activation',
+          title: 'The activation-energy problem',
+          body,
+          stats: [
+            { label: 'Time to learn', value: `${timePct.toFixed(0)}%` },
+            { label: 'Rank', value: `#${rank}` },
+          ],
+        });
+      }
+
+      // Philosophical Block (keys 6 intellectual reluctance, 0 no interest, 7 career stage)
+      const philKeys = ['6', '0', '7'];
+      const philInTop = philKeys.filter(k => topBarrierKeys.includes(k));
+      const intelPct = ((barriers['6'] || 0) / q1Total * 100);
+      const noIntPct = ((barriers['0'] || 0) / q1Total * 100);
+      const careerPct = ((barriers['7'] || 0) / q1Total * 100);
+
+      if (philInTop.length > 0) {
+        let body = `<p>A meaningful fraction of the room cites <strong>philosophical or career-stage</strong> objections — intellectual reluctance (<strong>${intelPct.toFixed(0)}%</strong>), no interest (<strong>${noIntPct.toFixed(0)}%</strong>), or career-stage concerns (<strong>${careerPct.toFixed(0)}%</strong>).</p>`;
+        body += `<p>These barriers don't respond to infrastructure. They respond to <em>demonstration</em> — seeing a respected colleague use the tools on a real scientific problem, getting a real scientific result, and having the integrity of the work survive peer review. They also respond to honest discussion of <em>where AI shouldn't be used</em> — the absence of that conversation is itself part of what fuels the reluctance.</p>`;
+
+        expandedAnalysis.push({
+          category: 'philosophical',
+          tag: '◇ Philosophical Block',
+          title: 'Barriers that need demonstration, not infrastructure',
+          body,
+          stats: [
+            { label: 'Intellectual reluctance', value: `${intelPct.toFixed(0)}%` },
+            { label: 'No interest', value: `${noIntPct.toFixed(0)}%` },
+            { label: 'Career stage', value: `${careerPct.toFixed(0)}%` },
+          ],
+        });
+      } else if (noIntPct === 0 && q1Total >= 5) {
+        // Special case: nobody is uninterested. Worth flagging as a positive signal.
+        expandedAnalysis.push({
+          category: 'philosophical',
+          tag: '◇ What Isn\'t a Barrier',
+          title: 'What this audience did NOT pick',
+          body: `<p>Zero people picked <strong>"No interest"</strong>. Nobody in the room is philosophically opposed to using AI. Combined with the low rate of "Intellectual reluctance" (<strong>${intelPct.toFixed(0)}%</strong>), this tells you something important: <em>the room wants this</em>. They are not waiting to be convinced. They are waiting to be enabled.</p>`,
+          stats: [
+            { label: 'No interest', value: `${noIntPct.toFixed(0)}%` },
+            { label: 'Intellectual reluctance', value: `${intelPct.toFixed(0)}%` },
+          ],
+        });
+      }
+
+      // ============================================================
+      //  SYNTHESIS — connect Q1 distribution to Q2 top barriers
+      // ============================================================
+      let synthesis = null;
+      if (q1Total >= 3 && topBarriers.length > 0) {
+        const top1 = topBarriers[0];
+        const top1Pct = (top1.count / q1Total * 100);
+
+        let title = '';
+        let body = '';
+
+        if (earlyPct >= 50 && (topBarrierKeys.includes('3') || topBarrierKeys.includes('1'))) {
+          title = 'An early-stage room blocked by institutional gaps';
+          body = `<p>The room is mostly early-stage (<strong>${earlyPct.toFixed(0)}%</strong> at tier A or B), and the dominant barrier is something Northwestern itself could fix — support infrastructure, institutional licensing, or both. This is the cleanest possible case for institutional action: a population that wants to move forward, blocked by decisions that aren't theirs to make.</p>`;
+          body += `<p>The single most leveraged move would be a <strong>Northwestern equivalent of UChicago's Claude Enterprise rollout</strong>: secured access, institutional licensing, and a small training program. That alone would move the largest segment of this room from tier B to tier C–D within a year.</p>`;
+        } else if (topBarrierKeys.includes('5') && topBarrierKeys.includes('2')) {
+          title = 'A working-tool audience hitting the trust + time double-bind';
+          body = `<p>The center of mass is in working-tool tiers (C and D), and the two dominant barriers are <strong>Output trust</strong> (<strong>${((barriers['5']||0)/q1Total*100).toFixed(0)}%</strong>) and <strong>Time to learn</strong> (<strong>${((barriers['2']||0)/q1Total*100).toFixed(0)}%</strong>). These are the barriers of people who have tried, hit a wall, and don't have the bandwidth to grind through it alone.</p>`;
+          body += `<p>The interventions that work for this combination are <em>not</em> introductory workshops. They are <strong>verification scaffolding</strong> (give people tools and patterns to check AI output against known references) and <strong>pair-programming-style sessions</strong> (one hour with an expert, applied to a real task). Generic training is a waste of effort for this audience.</p>`;
+        } else if (topBarrierKeys.includes('4')) {
+          title = 'A room blocked by ambiguity about what is allowed';
+          body = `<p>Data security and IRB concerns rank in the top three barriers. In an imaging research environment this almost always means the same thing: <strong>nobody has told people what is OK</strong>. Is a de-identified DICOM OK to send to a commercial LLM? What about a coded subject ID? What about sponsor data under a DUA?</p>`;
+          body += `<p>The fix is not better tools. The fix is a one-page institutional document — written by IRB, IT security, and research administration jointly — that says, in clear language, what data classifications are permitted in which AI tools. Until that document exists, careful researchers will continue to opt out of AI for safety reasons that are entirely rational.</p>`;
+        } else if (advPct >= 35) {
+          title = 'An advanced room asking the next-level questions';
+          body = `<p>This room is unusually sophisticated — <strong>${advPct.toFixed(0)}%</strong> are already at agentic or connected-systems level. The barriers they cite are not "how do I start" barriers. They are <strong>governance and scale</strong> barriers: ${top1.title}, and the others in the top three.</p>`;
+          body += `<p>The institutional response for this audience is different. They don't need training programs. They need <strong>infrastructure</strong>: institutional MCP servers, sanctioned access patterns, IRB clarity on agentic workflows, and explicit support for the people who are already doing the work.</p>`;
+        } else {
+          title = 'A mixed room with a clear top barrier';
+          body = `<p>The room is spread across adoption tiers, and the dominant barrier is <strong>${top1.title}</strong> at <strong>${top1Pct.toFixed(0)}%</strong>. Because the audience is mixed, no single intervention reaches everyone — but addressing the top barrier reaches more of the room than anything else available.</p>`;
+          body += `<p>The most productive next move is to design the response around <em>${top1.title.toLowerCase()}</em> specifically, accepting that a meaningful minority will need different interventions.</p>`;
+        }
+
+        // Closing line — always tie to action
+        body += `<p><em>The audience handed you a thesis statement. The data says what to address first.</em></p>`;
+
+        synthesis = { title, body };
+      }
+
       return {
         headline,
         followup,
         insights,
+        expandedAnalysis,
+        synthesis,
         topAdoption: [topAdoption.key],
         topBarriers: topBarriers.slice(0, 2).map(b => b.key),
       };
